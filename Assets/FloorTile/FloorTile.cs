@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
+[RequireComponent(typeof(BoxCollider))]
 public class FloorTile : MonoBehaviour
 {
     private MeshRenderer MeshRenderer;

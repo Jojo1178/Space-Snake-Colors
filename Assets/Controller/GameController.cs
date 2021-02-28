@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
@@ -8,6 +9,12 @@ public class GameController : MonoBehaviour
     public GameoverScreen GameOverScreen;
     public InGameScreen InGameScreen;
     public int PlayerScore = 0;
+
+    [Header("Material")]
+    public Material SkyboxMaterial;
+    public float skyboxColorChangeSec = 5;
+    public Color[] skyboxColor;
+    public Material[] ObstacleMaterials = new Material[2];
 
     [Header("Always Present in Scene")]
     public CameraController CameraController;
@@ -21,9 +28,6 @@ public class GameController : MonoBehaviour
     public int spawnOffset = 100;
     public int worldZLimit = 1000;
 
-    [Header("Obsctable Material")]
-    public Material[] ObstacleMaterials = new Material[2];
-
     [Header("Random")]
     public int orbSpawnPercentage = 5;
     public int holeSpawnPercentage = 5;
@@ -33,8 +37,13 @@ public class GameController : MonoBehaviour
     private int zSpawnPosition = 0;
     private int lastOrbZPosition = 0;
     private Player playerInstanciated;
+
     private int playerColorIndex;
+    private int skyboxColorIndex;
     private string highScoreKey = "highScore";
+
+    private bool stopCoroutine = false;
+
     private void Awake()
     {
         INSTANCE = this;
@@ -46,6 +55,39 @@ public class GameController : MonoBehaviour
     void Start()
     {
         Application.targetFrameRate = 60;
+        this.skyboxColorIndex = Random.Range(0, this.skyboxColor.Length);
+        this.SkyboxMaterial.color = this.skyboxColor[this.skyboxColorIndex];
+        StartCoroutine(this.UpdateSkyBoxColor());
+    }
+
+    private void OnDisable()
+    {
+        this.stopCoroutine = true;
+    }
+
+    private IEnumerator UpdateSkyBoxColor()
+    {
+        float time = 1;
+        Color currentColor = Color.white;
+        Color nextColor = Color.white;
+        while (!this.stopCoroutine)
+        {
+            if (time >= 1)
+            {
+                time = 0;
+                this.skyboxColorIndex++;
+                if (this.skyboxColorIndex >= this.skyboxColor.Length)
+                {
+                    this.skyboxColorIndex = 0;
+                }
+                currentColor = this.SkyboxMaterial.color;
+                nextColor = this.skyboxColor[this.skyboxColorIndex];
+            }
+
+            time += Time.deltaTime / this.skyboxColorChangeSec;
+            this.SkyboxMaterial.color = Color.Lerp(currentColor, nextColor, time);
+            yield return null;
+        }
     }
 
     // Update is called once per frame
@@ -77,25 +119,37 @@ public class GameController : MonoBehaviour
             {
                 this.playerColorIndex = 0;
             }
-            this.playerInstanciated.SetColor(this.ObstacleMaterials[this.playerColorIndex].color);
+            this.ApplyColor(this.ObstacleMaterials[this.playerColorIndex]);
         }
+    }
+
+    private void ApplyColor(Material material)
+    {
+        Color color = material.GetColor("_CellColor");
+        this.playerInstanciated.SetColor(color);
     }
 
     public void AddScore(int scoreValue)
     {
         this.PlayerScore += scoreValue;
         this.InGameScreen.ScoreText.text = this.PlayerScore.ToString();
+        if(this.PlayerScore / 10 >= this.playerInstanciated.Tails.Count)
+        {
+            this.playerInstanciated.AddTail();
+            this.CameraController.UpdateOffset(Vector3.forward * -1);
+        }
     }
 
     public void StartGame()
     {
         this.ResetWorld();
         this.PlayerScore = 0;
-        this.AddScore(0);
         this.InGameScreen.gameObject.SetActive(true);
         this.playerInstanciated = GameObject.Instantiate(this.PlayerPrefab, new Vector3(0, 0.5f, 0), this.PlayerPrefab.transform.rotation);
-        this.playerInstanciated.SetColor(this.ObstacleMaterials[this.playerColorIndex].color);
+
         this.CameraController.TrackPlayer(this.playerInstanciated, this.CameraStartPoint);
+        this.ApplyColor(this.ObstacleMaterials[this.playerColorIndex]);
+        this.AddScore(0);
 
     }
 
@@ -164,13 +218,13 @@ public class GameController : MonoBehaviour
             else if (trapValue < this.obstacleSpawnPercentage)
             {
                 Obstacle obstacle = this.InstanciateObstacle(Random.Range(0, this.ObstacleMaterials.Length));
-                chunk.PlaceGameobject(obstacle.gameObject, floorIdx);
+                chunk.PlaceObstacle(obstacle, floorIdx);
             }
 
             if(!orbPlaced && !trapPlaced && Random.Range(0, 100) < this.orbSpawnPercentage)
             {
                 Orb orb = this.InstanciateOrb();
-                chunk.PlaceGameobject(orb.gameObject, floorIdx);
+                chunk.PlaceOrb(orb, floorIdx);
                 this.lastOrbZPosition = this.zSpawnPosition;
                 orbPlaced = true;
             }

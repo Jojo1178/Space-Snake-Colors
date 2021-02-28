@@ -1,19 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
     public MeshRenderer MeshRenderer;
-    private Color Color;
+    public float downTimeSec = 0.25f;
 
     public void AssignMaterial(Material material)
     {
         this.MeshRenderer.material = material;
-        this.Color = this.GetColor();
     }
 
     public Color GetColor()
     {
-        return this.MeshRenderer.material.color;
+        return this.MeshRenderer.material.GetColor("_CellColor");
     }
 
     private void OnTriggerEnter(Collider other)
@@ -27,16 +27,21 @@ public class Obstacle : MonoBehaviour
             }
             else
             {
-                this.MeshRenderer.material.color = Color.yellow;
+                StartCoroutine(this.GoDown());
             }
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    private IEnumerator GoDown()
     {
-        if (other.gameObject.GetComponent<Player>() != null)
+        Vector3 currentPos = transform.position;
+        Vector3 target = currentPos + Vector3.down * this.transform.localScale.y;
+        var t = 0f;
+        while (t < 1)
         {
-            this.MeshRenderer.material.color = this.Color;
+            t += Time.deltaTime / this.downTimeSec;
+            transform.position = Vector3.Lerp(currentPos, target, t);
+            yield return null;
         }
     }
 }

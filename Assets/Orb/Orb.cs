@@ -4,6 +4,7 @@ public class Orb : MonoBehaviour
 {
     public int ScoreValue = 1;
     public MeshRenderer MeshRenderer;
+    public Chunk linkedChunk;
     private Color Color;
 
     public void SetColor(Color color)
@@ -18,11 +19,11 @@ public class Orb : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("test");
         Player player = other.gameObject.GetComponent<Player>();
         if (player != null)
         {
             GameController.INSTANCE.AddScore(this.ScoreValue);
+            this.linkedChunk.RemoveOrbFromList(this);
             this.gameObject.SetActive(false);
         }
     }

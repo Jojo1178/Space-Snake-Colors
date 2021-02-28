@@ -1,18 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof (Rigidbody))]
 [RequireComponent(typeof(MeshRenderer))]
 public class Player : MonoBehaviour
 {
+    public Tail TailPrefab;
     public float ForwardSpeed = 4;
     public float LateralSpeed = 3;
+    public List<Tail> Tails = new List<Tail>();
 
     private Rigidbody PlayerRigidbody;
     private MeshRenderer MeshRenderer;
 
     private Vector3 currentMovement = Vector3.zero;
+
 
 #if UNITY_EDITOR
     private Vector3 previousMousePosition;
@@ -58,7 +60,11 @@ public class Player : MonoBehaviour
 
     public void HasBeenHit(string causeOfDeath)
     {
-        // Debug.Log(causeOfDeath);
+        //Debug.Log(causeOfDeath);
+        foreach (Tail tail in this.Tails)
+        {
+            Destroy(tail.gameObject);
+        }
         Destroy(this.gameObject);
         GameController.INSTANCE.StopGame();
     }
@@ -71,5 +77,22 @@ public class Player : MonoBehaviour
     public void SetColor(Color color)
     {
         this.MeshRenderer.material.color = color;
+    }
+
+    public void AddTail()
+    {
+        Transform lastTail;
+        if(this.Tails.Count > 0)
+        {
+            lastTail = this.Tails[this.Tails.Count - 1].transform;
+        }
+        else
+        {
+            lastTail = this.transform;
+        }
+        Tail tail = GameObject.Instantiate(this.TailPrefab, lastTail.position - this.transform.forward, this.TailPrefab.transform.rotation);
+        tail.Player = this;
+        tail.Target = lastTail;
+        this.Tails.Add(tail);
     }
 }

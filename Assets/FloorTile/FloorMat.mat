@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: FloorMat
-  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: 13970ce94d92653458259d75d6e222a9, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -63,15 +63,23 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _GridSize: 1
+    - _LineSize: 0.025
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _SelectCell: 0
+    - _SelectedCellX: 0
+    - _SelectedCellY: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _CellColor: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 0.15686275}
+    - _Color: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _LineColor: {r: 0, g: 0.5019608, b: 0, a: 1}
+    - _SelectedColor: {r: 1, g: 0, b: 0, a: 1}
