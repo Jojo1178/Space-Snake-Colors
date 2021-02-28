@@ -1,6 +1,6 @@
 ﻿using System.Collections;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 [RequireComponent(typeof(TextMeshProUGUI))]
 public class FPS : MonoBehaviour
@@ -8,7 +8,8 @@ public class FPS : MonoBehaviour
     private int FramesPerSec;
     private float frequency = 1.0f;
     private TextMeshProUGUI textMeshProUGUI;
-    void Start()
+
+    private void Start()
     {
         this.textMeshProUGUI = this.GetComponent<TextMeshProUGUI>();
         StartCoroutine(FPSCoroutine());
@@ -16,19 +17,14 @@ public class FPS : MonoBehaviour
 
     private IEnumerator FPSCoroutine()
     {
-        for (; ; )
+        while (true)
         {
-            // Capture frame-per-second
             int lastFrameCount = Time.frameCount;
             float lastTime = Time.realtimeSinceStartup;
             yield return new WaitForSeconds(frequency);
             float timeSpan = Time.realtimeSinceStartup - lastTime;
             int frameCount = Time.frameCount - lastFrameCount;
-
-            // Display it
-
             this.textMeshProUGUI.text = string.Format("FPS: {0}", Mathf.RoundToInt(frameCount / timeSpan));
         }
     }
-
 }

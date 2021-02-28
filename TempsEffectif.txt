@@ -1,3 +1,6 @@
 Conception théorique: 1h
-Shader, UI : 1h30
-Programmation: 11h
+Shader, UI : 5h30
+Programmation: 13h
+Son, Effet: 1h30
+
+Total: 21h

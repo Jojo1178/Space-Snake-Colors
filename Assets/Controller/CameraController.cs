@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -10,7 +8,6 @@ public class CameraController : MonoBehaviour
     public Vector3 offset;
     public float offetUpdateSec = 1;
 
-
     public void TrackPlayer(Player player, Vector3 startPosition = default)
     {
         this.Player = player;
@@ -18,13 +15,14 @@ public class CameraController : MonoBehaviour
         this.offset = this.transform.position - this.Player.transform.position;
     }
 
-    void Update()
+    private void Update()
     {
         if (this.Player != null)
         {
             this.transform.position = this.Player.transform.position + offset;
         }
     }
+
     public void UpdateOffset(Vector3 delta)
     {
         StartCoroutine(this.UpdateOffsetCoroutine(this.offset + delta));

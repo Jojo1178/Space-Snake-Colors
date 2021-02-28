@@ -16,7 +16,7 @@ public class SimplePool : MonoBehaviour
 
     public void ResetPool()
     {
-        foreach(GameObject gameObject in this.PooledObjects)
+        foreach (GameObject gameObject in this.PooledObjects)
         {
             gameObject.SetActive(false);
         }
@@ -25,7 +25,7 @@ public class SimplePool : MonoBehaviour
     public GameObject GetPooledObject()
     {
         GameObject toReturn = null;
-        for (int idx = 0;toReturn == null && idx < this.PooledObjects.Count; idx++)
+        for (int idx = 0; toReturn == null && idx < this.PooledObjects.Count; idx++)
         {
             if (!this.PooledObjects[idx].activeInHierarchy)
             {
@@ -51,7 +51,7 @@ public class SimplePool : MonoBehaviour
         GameObject tmp;
         for (int idx = idxStart; idx < idxEnd; idx++)
         {
-            tmp = GameObject.Instantiate(this.ObjectToPool,this.transform);
+            tmp = GameObject.Instantiate(this.ObjectToPool, this.transform);
             tmp.SetActive(false);
             this.PooledObjects.Add(tmp);
         }
