@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Chunk : MonoBehaviour
@@ -59,6 +60,8 @@ public class Chunk : MonoBehaviour
     public void PlaceObstacle(Obstacle obstacle, int floorId)
     {
         this.PlaceGameobject(obstacle.gameObject, floorId);
+        obstacle.transform.position = obstacle.transform.position + Vector3.down * obstacle.transform.localScale.y;
+        StartCoroutine(obstacle.GoUp());
     }
 
     public void PlaceOrb(Orb orb, int floorId)

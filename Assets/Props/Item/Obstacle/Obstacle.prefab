@@ -138,3 +138,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MeshRenderer: {fileID: 8764294664532035892}
+  downTimeSec: 0.25
+  upTimeSec: 1.75

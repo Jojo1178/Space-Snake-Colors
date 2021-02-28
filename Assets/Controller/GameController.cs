@@ -187,10 +187,10 @@ public class GameController : MonoBehaviour
         yield return this.InGameScreen.TypeInstruction("Drag <color=green>left</color> and <color=red>right</color> to move your snake", 3);
 
         this.SpawnHoleAndObstacleLine();
-        yield return this.InGameScreen.TypeInstruction("Avoid <color=red>hole</color> and <color=green>obstacles</color> on the road", 6);
+        yield return this.InGameScreen.TypeInstruction("Avoid <color=red>holes</color> and <color=green>obstacles</color> on the road", 6);
 
         this.SpawnObstacleLine();
-        yield return this.InGameScreen.TypeInstruction($"Or <color=red>smash</color> obstacles of the same {colorStr} as your <color=green>head</color>", 6);
+        yield return this.InGameScreen.TypeInstruction($"Or <color=red>smash</color> obstacles with the same {colorStr} as your <color=green>head</color>", 6);
 
         this.InGameScreen.SwitchColorPanel.gameObject.SetActive(true);
         this.InGameScreen.SwitchColorPanel.color = new Color(0, 0, 0, .5f);

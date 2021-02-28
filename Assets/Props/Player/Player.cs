@@ -83,7 +83,6 @@ public class Player : MonoBehaviour
 
     public void HasBeenHit(string causeOfDeath)
     {
-        //Debug.Log(causeOfDeath);
         AudioController.INSTANCE.PlayPlayerDeathSound();
         bool falling = causeOfDeath == "hole";
         if (falling)
@@ -121,7 +120,7 @@ public class Player : MonoBehaviour
         {
             lastTail = this.transform;
         }
-        Tail tail = GameObject.Instantiate(this.TailPrefab, lastTail.position /*- this.transform.forward*/, this.TailPrefab.transform.rotation);
+        Tail tail = GameObject.Instantiate(this.TailPrefab, lastTail.position, this.TailPrefab.transform.rotation);
         tail.Player = this;
         tail.Target = lastTail;
         tail.transform.localScale = Vector3.zero;
