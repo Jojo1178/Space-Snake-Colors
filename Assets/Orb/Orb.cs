@@ -23,6 +23,7 @@ public class Orb : MonoBehaviour
         if (player != null)
         {
             GameController.INSTANCE.AddScore(this.ScoreValue);
+            player.GrowTail();
             this.linkedChunk.RemoveOrbFromList(this);
             this.gameObject.SetActive(false);
         }

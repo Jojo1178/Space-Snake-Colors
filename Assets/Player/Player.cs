@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof (Rigidbody))]
@@ -8,13 +9,14 @@ public class Player : MonoBehaviour
     public Tail TailPrefab;
     public float ForwardSpeed = 4;
     public float LateralSpeed = 3;
+    public float TailGrowSpeedSec = 0.25f;
     public List<Tail> Tails = new List<Tail>();
 
     private Rigidbody PlayerRigidbody;
     private MeshRenderer MeshRenderer;
 
     private Vector3 currentMovement = Vector3.zero;
-
+    private float tailGrowStep = 1;
 
 #if UNITY_EDITOR
     private Vector3 previousMousePosition;
@@ -24,6 +26,7 @@ public class Player : MonoBehaviour
     {
         this.PlayerRigidbody = GetComponent<Rigidbody>();
         this.MeshRenderer = GetComponent<MeshRenderer>();
+        this.tailGrowStep = 1.0f / GameController.INSTANCE.newTailStep;
     }
 
     void Update()
@@ -85,14 +88,35 @@ public class Player : MonoBehaviour
         if(this.Tails.Count > 0)
         {
             lastTail = this.Tails[this.Tails.Count - 1].transform;
+            lastTail.transform.localScale = this.transform.localScale;
         }
         else
         {
             lastTail = this.transform;
         }
-        Tail tail = GameObject.Instantiate(this.TailPrefab, lastTail.position - this.transform.forward, this.TailPrefab.transform.rotation);
+        Tail tail = GameObject.Instantiate(this.TailPrefab, lastTail.position /*- this.transform.forward*/, this.TailPrefab.transform.rotation);
         tail.Player = this;
         tail.Target = lastTail;
+        tail.transform.localScale = Vector3.zero;
         this.Tails.Add(tail);
+    }
+
+    public void GrowTail()
+    {
+        Tail tail = this.Tails[this.Tails.Count - 1];
+        StartCoroutine(this.GrowTailCoroutine(tail));
+    }
+
+    private IEnumerator GrowTailCoroutine(Tail tail)
+    {
+        Vector3 currentScale = tail.transform.localScale;
+        Vector3 target = currentScale + this.transform.localScale * this.tailGrowStep;
+        var t = 0f;
+        while (t < 1)
+        {
+            t += Time.deltaTime / this.TailGrowSpeedSec;
+            tail.transform.localScale = Vector3.Lerp(currentScale, target, t);
+            yield return null;
+        }
     }
 }

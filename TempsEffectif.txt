@@ -1,1 +1,3 @@
 Conception théorique: 1h
+Shader, UI : 1h30
+Programmation: 11h

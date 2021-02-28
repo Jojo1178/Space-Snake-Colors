@@ -28,11 +28,12 @@ public class GameController : MonoBehaviour
     public int spawnOffset = 100;
     public int worldZLimit = 1000;
 
-    [Header("Random")]
+    [Header("Game Options")]
     public int orbSpawnPercentage = 5;
     public int holeSpawnPercentage = 5;
     public int obstacleSpawnPercentage = 30;
     public int orbMinSpace = 5;
+    public int newTailStep = 10;
 
     private int zSpawnPosition = 0;
     private int lastOrbZPosition = 0;
@@ -133,7 +134,7 @@ public class GameController : MonoBehaviour
     {
         this.PlayerScore += scoreValue;
         this.InGameScreen.ScoreText.text = this.PlayerScore.ToString();
-        if(this.PlayerScore / 10 >= this.playerInstanciated.Tails.Count)
+        if(this.PlayerScore / this.newTailStep >= this.playerInstanciated.Tails.Count)
         {
             this.playerInstanciated.AddTail();
             this.CameraController.UpdateOffset(Vector3.forward * -1);
